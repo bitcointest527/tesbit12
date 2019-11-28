@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+#  bitcoinphantomd The bitcoinphantom core server.
+#
+#
+# chkconfig: 345 80 20
+# description: bitcoinphantomd
+# processname: bitcoinphantomd
+#
+
+# Source function library.
+. /etc/init.d/functions
+
+# you can override defaults in /etc/sysconfig/bitcoinphantomd, see below
+if [ -f /etc/sysconfig/bitcoinphantomd ]; then
+        . /etc/sysconfig/bitcoinphantomd
+fi
+
+RETVAL=0
+
+prog=bitcoinphantomd
+# you can override the lockfile via bitcoinphantomD_LOCKFILE in /etc/sysconfig/bitcoinphantomd
+lockfile=${bitcoinphantomD_LOCKFILE-/var/lock/subsys/bitcoinphantomd}
+
+# bitcoinphantomd defaults to /usr/bin/bitcoinphantomd, override with bitcoinphantomD_BIN
+bitcoinphantomd=${bitcoinphantomD_BIN-/usr/bin/bitcoinphantomd}
+
+# bitcoinphantomd opts default to -disablewallet, override with bitcoinphantomD_OPTS
+bitcoinphantomd_opts=${bitcoinphantomD_OPTS--disablewallet}
+
+start() {
+    echo -n $"Starting $prog: "
+    daemon $DAEMONOPTS $bitcoinphantomd $bitcoinphantomd_opts
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch $lockfile
+    return $RETVAL
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    killproc $prog
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && rm -f $lockfile
+    return $RETVAL
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status $prog
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: service $prog {start|stop|status|restart}"
+        exit 1
+        ;;
+esac

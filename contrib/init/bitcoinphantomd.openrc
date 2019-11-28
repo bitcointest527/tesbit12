@@ -1,0 +1,92 @@
+#!/sbin/openrc-run
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/bitcoinphantom/.bitcoinphantom3" ]; then
+	bitcoinphantomD_DEFAULT_DATADIR="/var/lib/bitcoinphantom/.bitcoinphantom3"
+else
+	bitcoinphantomD_DEFAULT_DATADIR="/var/lib/bitcoinphantomd"
+fi
+
+bitcoinphantomD_CONFIGFILE=${bitcoinphantomD_CONFIGFILE:-/etc/bitcoinphantom/bitcoinphantom.conf}
+bitcoinphantomD_PIDDIR=${bitcoinphantomD_PIDDIR:-/var/run/bitcoinphantomd}
+bitcoinphantomD_PIDFILE=${bitcoinphantomD_PIDFILE:-${bitcoinphantomD_PIDDIR}/bitcoinphantomd.pid}
+bitcoinphantomD_DATADIR=${bitcoinphantomD_DATADIR:-${bitcoinphantomD_DEFAULT_DATADIR}}
+bitcoinphantomD_USER=${bitcoinphantomD_USER:-${bitcoinphantom_USER:-bitcoinphantom}}
+bitcoinphantomD_GROUP=${bitcoinphantomD_GROUP:-bitcoinphantom}
+bitcoinphantomD_BIN=${bitcoinphantomD_BIN:-/usr/bin/bitcoinphantomd}
+bitcoinphantomD_NICE=${bitcoinphantomD_NICE:-${NICELEVEL:-0}}
+bitcoinphantomD_OPTS="${bitcoinphantomD_OPTS:-${bitcoinphantom_OPTS}}"
+
+name="bitcoinphantom Core Daemon"
+description="bitcoinphantom cryptocurrency P2P network daemon"
+
+command="/usr/bin/bitcoinphantomd"
+command_args="-pid=\"${bitcoinphantomD_PIDFILE}\" \
+		-conf=\"${bitcoinphantomD_CONFIGFILE}\" \
+		-datadir=\"${bitcoinphantomD_DATADIR}\" \
+		-daemon \
+		${bitcoinphantomD_OPTS}"
+
+required_files="${bitcoinphantomD_CONFIGFILE}"
+start_stop_daemon_args="-u ${bitcoinphantomD_USER} \
+			-N ${bitcoinphantomD_NICE} -w 2000"
+pidfile="${bitcoinphantomD_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${bitcoinphantomD_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${bitcoinphantomD_USER}:${bitcoinphantomD_GROUP}" \
+	"${bitcoinphantomD_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${bitcoinphantomD_USER}:${bitcoinphantomD_GROUP}" \
+	"${bitcoinphantomD_PIDDIR}"
+
+	checkpath -f \
+	-o ${bitcoinphantomD_USER}:${bitcoinphantomD_GROUP} \
+	-m 0660 \
+	${bitcoinphantomD_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${bitcoinphantomD_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run bitcoinphantomd."
+		eerror "The setting must appear in ${bitcoinphantomD_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following "
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"bitcoinphantom Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

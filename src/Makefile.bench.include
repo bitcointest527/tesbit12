@@ -1,0 +1,86 @@
+# Copyright (c) 2015-2016 The Bitcoin Core developers
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+bin_PROGRAMS += bench/bench_bitcoinphantom
+BENCH_SRCDIR = bench
+BENCH_BINARY = bench/bench_bitcoinphantom$(EXEEXT)
+
+RAW_BENCH_FILES = \
+  bench/data/block413567.raw
+GENERATED_BENCH_FILES = $(RAW_BENCH_FILES:.raw=.raw.h)
+
+bench_bench_bitcoinphantom_SOURCES = \
+  $(RAW_BENCH_FILES) \
+  bench/bench_bitcoinphantom.cpp \
+  bench/bench.cpp \
+  bench/bench.h \
+  bench/checkblock.cpp \
+  bench/checkqueue.cpp \
+  bench/examples.cpp \
+  bench/rollingbloom.cpp \
+  bench/crypto_hash.cpp \
+  bench/ccoins_caching.cpp \
+  bench/merkle_root.cpp \
+  bench/mempool_eviction.cpp \
+  bench/verify_script.cpp \
+  bench/base58.cpp \
+  bench/lockedpool.cpp \
+  bench/prevector.cpp
+
+nodist_bench_bench_bitcoinphantom_SOURCES = $(GENERATED_BENCH_FILES)
+
+bench_bench_bitcoinphantom_CPPFLAGS = $(AM_CPPFLAGS) $(bitcoinphantom_INCLUDES) $(EVENT_CLFAGS) $(EVENT_PTHREADS_CFLAGS) -I$(builddir)/bench/
+bench_bench_bitcoinphantom_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+bench_bench_bitcoinphantom_LDADD = \
+  $(libbitcoinphantom_WALLET) \
+  $(libbitcoinphantom_SERVER) \
+  $(libbitcoinphantom_COMMON) \
+  $(libbitcoinphantom_UTIL) \
+  $(libbitcoinphantom_CONSENSUS) \
+  $(libbitcoinphantom_CRYPTO) \
+  $(libbitcoinphantom_ZMQ) \
+  $(LIBLEVELDB) \
+  $(LIBLEVELDB_SSE42) \
+  $(LIBMEMENV) \
+  $(LIBSECP256K1) \
+  $(LIBUNIVALUE) \
+  $(TOR_LIBS) \
+  $(LIBEVENT_LIBS) \
+  $(LIBSECCOMP_LIBS) \
+  $(LIBCAP_LIBS) \
+  $(ZLIB_LIBS)
+
+if ENABLE_ZMQ
+bench_bench_bitcoinphantom_LDADD += $(libbitcoinphantom_ZMQ) $(ZMQ_LIBS)
+endif
+
+if ENABLE_WALLET
+bench_bench_bitcoinphantom_SOURCES += bench/coin_selection.cpp
+endif
+
+bench_bench_bitcoinphantom_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(LIBEVENT_LDFLAGS) $(LIBSECCOMP_LDFLAGS) $(LIBCAP_LDFLAGS) -lz
+bench_bench_bitcoinphantom_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+
+CLEAN_bitcoinphantom_BENCH = bench/*.gcda bench/*.gcno $(GENERATED_BENCH_FILES)
+
+CLEANFILES += $(CLEAN_bitcoinphantom_BENCH)
+
+bench/checkblock.cpp: bench/data/block413567.raw.h
+
+bitcoinphantom_bench: $(BENCH_BINARY)
+
+bench: $(BENCH_BINARY) FORCE
+	$(BENCH_BINARY)
+
+bitcoinphantom_bench_clean : FORCE
+	rm -f $(CLEAN_bitcoinphantom_BENCH) $(bench_bench_bitcoinphantom_OBJECTS) $(BENCH_BINARY)
+
+%.raw.h: %.raw
+	@$(MKDIR_P) $(@D)
+	@{ \
+	 echo "static unsigned const char $(*F)[] = {" && \
+	 $(HEXDUMP) -v -e '8/1 "0x%02x, "' -e '"\n"' $< | $(SED) -e 's/0x  ,//g' && \
+	 echo "};"; \
+	} > "$@.new" && mv -f "$@.new" "$@"
+	@echo "Generated $@"

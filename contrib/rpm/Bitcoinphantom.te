@@ -1,0 +1,81 @@
+policy_module(bitcoinphantom, 1.100.1)
+
+########################################
+#
+# Declarations
+#
+
+type bitcoinphantom_t;
+type bitcoinphantom_exec_t;
+init_daemon_domain(bitcoinphantom_t, bitcoinphantom_exec_t)
+
+permissive bitcoinphantom_t;
+
+type bitcoinphantom_initrc_exec_t;
+init_script_file(bitcoinphantom_initrc_exec_t)
+
+type bitcoinphantom_conf_t;
+files_type(bitcoinphantom_conf_t)
+
+type bitcoinphantom_var_lib_t;
+files_type(bitcoinphantom_var_lib_t)
+
+type bitcoinphantom_var_run_t;
+files_type(bitcoinphantom_var_run_t)
+
+type bitcoinphantom_port_t;
+corenet_port(bitcoinphantom_port_t)
+
+########################################
+#
+# bitcoinphantom local policy
+#
+allow bitcoinphantom_t self:process { fork };
+
+allow bitcoinphantom_t self:fifo_file rw_fifo_file_perms;
+allow bitcoinphantom_t self:unix_stream_socket create_stream_socket_perms;
+
+manage_dirs_pattern(bitcoinphantom_t, bitcoinphantom_conf_t, bitcoinphantom_conf_t)
+manage_files_pattern(bitcoinphantom_t, bitcoinphantom_conf_t, bitcoinphantom_conf_t)
+
+manage_dirs_pattern(bitcoinphantom_t, bitcoinphantom_var_lib_t, bitcoinphantom_var_lib_t)
+manage_files_pattern(bitcoinphantom_t, bitcoinphantom_var_lib_t, bitcoinphantom_var_lib_t)
+files_var_lib_filetrans(bitcoinphantom_t, bitcoinphantom_var_lib_t, { dir file })
+
+manage_dirs_pattern(bitcoinphantom_t, bitcoinphantom_var_run_t, bitcoinphantom_var_run_t)
+manage_files_pattern(bitcoinphantom_t, bitcoinphantom_var_run_t, bitcoinphantom_var_run_t)
+
+sysnet_dns_name_resolve(bitcoinphantom_t)
+corenet_all_recvfrom_unlabeled(bitcoinphantom_t)
+
+allow bitcoinphantom_t self:tcp_socket create_stream_socket_perms;
+corenet_tcp_sendrecv_generic_if(bitcoinphantom_t)
+corenet_tcp_sendrecv_generic_node(bitcoinphantom_t)
+corenet_tcp_sendrecv_all_ports(bitcoinphantom_t)
+corenet_tcp_bind_generic_node(bitcoinphantom_t)
+
+gen_require(`
+    type bitcoinphantom_port_t;
+')
+allow bitcoinphantom_t bitcoinphantom_port_t:tcp_socket name_bind;
+
+gen_require(`
+    type bitcoinphantom_port_t;
+')
+allow bitcoinphantom_t bitcoinphantom_port_t:tcp_socket name_connect;
+
+domain_use_interactive_fds(bitcoinphantom_t)
+
+files_read_etc_files(bitcoinphantom_t)
+
+miscfiles_read_localization(bitcoinphantom_t)
+
+sysnet_dns_name_resolve(bitcoinphantom_t)
+
+allow bitcoinphantom_t bitcoinphantom_exec_t:file execute_no_trans;
+allow bitcoinphantom_t self:process setsched;
+corecmd_exec_ls(bitcoinphantom_t)
+corenet_tcp_connect_http_port(bitcoinphantom_t)
+dev_read_urand(bitcoinphantom_t)
+fs_getattr_xattr_fs(bitcoinphantom_t)
+kernel_read_system_state(bitcoinphantom_t)

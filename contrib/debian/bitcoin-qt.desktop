@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Name=bitcoinphantom Core
+Comment=Connect to the bitcoinphantom P2P Network
+Comment[de]=Verbinde mit dem bitcoinphantom peer-to-peer Netzwerk
+Comment[fr]=bitcoinphantom, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=bitcoinphantom, eşten eşe kriptografik sanal para birimi
+Exec=bitcoinphantom-qt %u
+Terminal=false
+Type=Application
+Icon=bitcoinphantom128
+MimeType=x-scheme-handler/bitcoinphantom;
+Categories=Office;Finance;P2P;Network;Qt;
+StartupWMClass=bitcoinphantom-qt

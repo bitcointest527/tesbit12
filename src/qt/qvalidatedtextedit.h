@@ -1,0 +1,25 @@
+#ifndef bitcoinphantom_QT_QVALIDATEDTEXTEDIT_H
+#define bitcoinphantom_QT_QVALIDATEDTEXTEDIT_H
+ #include <QPlainTextEdit>
+ /** Text edit that can be marked as "invalid" to show input validation feedback. When marked as invalid,
+   it will get a red background until it is focused.
+ */
+class QValidatedTextEdit : public QPlainTextEdit
+{
+    Q_OBJECT
+public:
+    explicit QValidatedTextEdit(QWidget *parent = 0);
+    void clear();
+ protected:
+    void focusInEvent(QFocusEvent *evt);
+ private:
+    bool valid;
+    QString errorText;
+ public slots:
+    void setValid(bool valid);
+    void setErrorText(QString errorText);
+ private slots:
+    void markValid();
+};
+
+#endif // bitcoinphantom_QT_QVALIDATEDTEXTEDIT_H

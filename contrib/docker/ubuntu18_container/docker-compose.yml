@@ -1,0 +1,10 @@
+version: '5.0'
+services:
+  container_bitcoinphantom:
+    image: my/container_bitcoinphantom
+    container_name: container_bitcoinphantom
+    ports:
+      - "11207:11207"
+      - "11211:11211"
+    volumes:
+    - ./conf/bitcoinphantom.conf:/root/.bitcoinphantom/bitcoinphantom.conf

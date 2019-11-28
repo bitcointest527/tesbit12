@@ -1,0 +1,8 @@
+/usr/bin/bitcoinphantom-cli		--	gen_context(system_u:object_r:bitcoinphantom_exec_t,s0)
+/usr/sbin/bitcoinphantomd		--	gen_context(system_u:object_r:bitcoinphantom_exec_t,s0)
+/usr/lib(64)?/bitcoinphantom/bitcoinphantomd		--	gen_context(system_u:object_r:bitcoinphantom_exec_t,s0)
+
+/etc/bitcoinphantom(/.*)?		gen_context(system_u:object_r:bitcoinphantom_conf_t,s0)
+/var/lib/bitcoinphantom(/.*)?		gen_context(system_u:object_r:bitcoinphantom_var_lib_t,s0)
+
+(/var)?/run/bitcoinphantomd(/.*)?   gen_context(system_u:object_r:bitcoinphantom_var_run_t,s0)

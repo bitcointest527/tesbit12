@@ -1,0 +1,6 @@
+usr/local/bin/bitcoinphantom-qt usr/bin
+share/pixmaps/bitcoinphantom32.xpm usr/share/pixmaps
+share/pixmaps/bitcoinphantom16.xpm usr/share/pixmaps
+share/pixmaps/bitcoinphantom128.png usr/share/pixmaps
+debian/bitcoinphantom-qt.desktop usr/share/applications
+debian/bitcoinphantom-qt.protocol usr/share/kde4/services/

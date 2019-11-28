@@ -1,0 +1,297 @@
+<p align="center"><img src="https://raw.githubusercontent.com/bitcoinphantom/bitcoinphantom/master/readme-header.png" alt="bitcoinphantom Source Code"></p>
+<p align="center">
+  <a href="https://circleci.com/gh/bitcoinphantom/bitcoinphantom/tree/master" target="_blank"><img src="https://circleci.com/gh/bitcoinphantom/bitcoinphantom/tree/master.svg?style=svg"></a>
+  <img src="https://img.shields.io/badge/status-stable-green.svg">
+  <img src="https://img.shields.io/badge/license-MIT-blue.svg">
+  <a href="https://codecov.io/gh/bitcoinphantom/bitcoinphantom">
+    <img src="https://codecov.io/gh/bitcoinphantom/bitcoinphantom/branch/develop/graph/badge.svg" />
+  </a>
+  <a href="https://github.com/bitcoinphantom/bitcoinphantom/releases">
+    <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/bitcoinphantom/bitcoinphantom/total?style=social">
+  </a>
+  <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/bitcoinphantom/bitcoinphantom">
+</p>
+
+# bitcoinphantom Source Code [btcx]
+
+## Specifications
+Specification | Value
+--- | ---
+Protocol | PoW (proof of Work)
+Algorithms | scrypt, x17, Lyra2rev2, myr-groestl, & blake2s
+Blocktime | 0.1 seconds
+Total Supply | 100,000,000,000 btcx
+RPC port | 11207
+P2P port | 11211
+pre-mine | N/A
+ICO | N/A
+
+## Blockrewards
+Block Number Range | Reward
+--- | ---
+0 to 14,000 | 600,000 coins
+14,001 to 28,000 | 300,000 coins
+28,001 to 42,000 | 200,000 coins
+42,001 to 210,000 | 100,000 coins
+210,001 to 378,000 | 60,000 coins
+378,001 to 546,000 | 37,500 coins
+546,001 to 714,000 | 18,750 coins
+714,001 to 2,124,000 | 4,375 coins
+2,124,001 to 3,700,000 | 3868 coins
+3,700,001 to 4,200,000 | 2434 coins
+4,200,001 to 4,700,000 | 1217 coins
+4,700,001 to 5,200,000 | 609 coins
+5,200,001 to 5,700,000 | 305  coins
+5,700,001 to 6,200,000 | 153  coins
+6,200,001 to 6,700,000 | 77 coins
+6,700,001 to 7,200,000 | 39 coins
+
+## Resources
+
+* [Blockchain Explorer](https://bitcoinphantom-blockchain.info/)
+* [Mining Pool List](https://bitcoinphantom.com/community/btcx-mining-pools/)
+* [Black Paper](https://bitcoinphantom.com/static/blackpaper/bitcoinphantom-Anonymity-Centric-CryptoCurrency.pdf)
+
+### Community
+
+* [Telegram](https://t.me/bitcoinphantombtcx)
+* [Discord](https://discord.gg/bitcoinphantom)
+* [Twitter](https://www.twitter.com/bitcoinphantom)
+* [Facebook](https://www.facebook.com/bitcoinphantom/)
+* [Reddit](https://www.reddit.com/r/bitcoinphantom/)
+
+## Wallets
+
+Binary (pre-compiled) wallets are available on all platforms at [https://bitcoinphantom.com](https://bitcoinphantom.com/#wallets).
+
+> **Note:** **Important!** Only download pre-compiled wallets from the official bitcoinphantom website or official Github repos.
+
+> **Note:** For a fresh wallet install you can reduce the blockchain syncing time by downloading [a nightly snapshot](https://bitcoinphantom-blockchain.com/down) and following the [setup instructions](https://bitcoinphantom-blockchain.com/howto).
+
+### Windows Wallet Usage
+
+1. Download the pre-compiled software.
+2. Install
+3. In windows file explorer, open `c:\Users\XXX\AppData\Roaming\bitcoinphantom` (be sure to change XXX to your windows user)
+4. Right click and create a new file `bitcoinphantom.txt`
+5. Edit the file to have the following contents (be sure to change the password)
+
+    ```
+    rpcuser=bitcoinphantomrpcusername
+    rpcpassword=85CpSuCNvDcYsdQU8w621mkQqJAimSQwCSJL5dPT9wQX
+    rpcport=11207
+    port=11211
+    daemon=1
+    algo=groestl
+    ```
+
+6. Save and close the file
+7. Rename the file to `bitcoinphantom.conf`
+8. Start the bitcoinphantom-qt program.
+9. Open up bitcoinphantom-qt console and run `getinfo` (or `getmininginfo`) to verify settings.
+
+> **Note:** You must re-start the wallet after making changes to `bitcoinphantom.conf`.
+
+### OS X Wallet
+
+1. Download the pre-compiled software.
+2. Double click the DMG
+3. Drag the bitcoinphantom-Qt to your Applications folder
+4. Double click the bitcoinphantom-Qt application to open it.
+5. Go grab a :coffee: while it syncs with the blockchain
+
+> **Note:** It may look like it is frozen or hung while it is indexing and syncing the blockchain. It's not. It's chugging away, but currently the UI doesn't give you a lot of feedback on status. We're working to fix that. Syncing takes a while to complete (ie. > 10 minutes or more) so just be patient.
+
+> **Note:** If you want to change your configuration the file is located at `~/Library/Application\ Support\bitcoinphantom\bitcoinphantom.conf`. This isn't required by default.
+
+### Unix Wallet
+
+1. Compile using [Unix instructions](doc/build-unix.md).
+2. The wallet GUI is in `./bitcoinphantom/src/qt` and the daemon in `./bitcoinphantom/src`.
+3. **Optional** - the binaries to your favorite location. for use by all users, run the following commands:
+
+    ```shell
+    sudo cp src/bitcoinphantomd /usr/bin/
+    sudo cp src/qt/bitcoinphantom-qt /usr/bin/
+    ```
+
+4. Run `./bitcoinphantomd` from wherever you put it. The output from this command will tell you that you need to make a `bitcoinphantom.conf` file and will suggest some good starting values.
+5.  Open up your new config file that was created in your home directory in your favorite text editor
+
+    ```shell
+    nano ~/.bitcoinphantom/bitcoinphantom.conf
+    ```
+
+6. Paste the output from the `bitcoinphantomd` command into the bitcoinphantom.conf like this: (It is recommended to change the password to something unique.)
+
+    ```
+    rpcuser=bitcoinphantomrpcusername
+    rpcpassword=85CpSuCNvDcYsdQU8w621mkQqJAimSQwCSJL5dPT9wQX
+    rpcport=11207
+    port=11211
+    daemon=1
+    algo=groestl
+    ```
+
+7. Save the file and exit your editor. If using `nano` type `ctrl + x` on your keyboard and the `y` and hitting enter. This should have created a `bitcoinphantom.conf` file with what you just added.
+
+8. Start the bitcoinphantom daemon again
+
+    ```shell
+    ./path/to/bitcoinphantomd
+    ```
+
+> **Note:** To check the status of how much of the blockchain has been downloaded (aka synced) type `./path/to/bitcoinphantomd getinfo`.
+
+> **Note**: If you see something like 'Killed (program cc1plus)' run ```dmesg``` to see the error(s)/problems(s). This is most likely caused by running out of resources. You may need to add some RAM or add some swap space.
+
+You can also check out this [Linux Wallet Video Tutorial](https://www.youtube.com/watch?v=WYe75b6RWes).
+
+## Building From Source
+
+* [Unix Instructions](doc/build-unix.md)
+* [OS X Instructions](doc/build-osx.md)
+* [Windows Instructions](doc/build-windows.md)
+
+## Developer Notes
+
+The Easy Method:
+
+> **Note**: Sometimes linux user permissions are not set up properly, and causes failed compiling in linux. Please ensure your user has access or do the install from root if these problems arise.
+
+```shell
+sudo rm -Rf ~/bitcoinphantom  #(if you already have it)
+sudo apt-get -y install git && cd ~ && git clone https://github.com/bitcoinphantom/bitcoinphantom && cd bitcoinphantom && sh go.sh
+```
+
+The _slightly_ longer version:
+
+1. Install the dependencies. **Note**: If you are on debian, you will also need to `apt-get install libcanberra-gtk-module`.
+
+    ```shell
+    sudo add-apt-repository ppa:bitcoin/bitcoin
+    sudo apt-get update
+    sudo apt-get install \
+        libdb4.8-dev libdb4.8++-dev build-essential \
+        libtool autotools-dev automake pkg-config libssl-dev libevent-dev \
+        bsdmainutils git libboost-all-dev libminiupnpc-dev libqt5gui5 \
+        libqt5core5a libqt5dbus5 libevent-dev qttools5-dev \
+        qttools5-dev-tools libprotobuf-dev protobuf-compiler libqrencode-dev \
+        libseccomp-dev libcap-dev
+    ```
+
+2. Clone the git repository and compile the daemon and gui wallet:
+
+    ```shell
+    git clone https://github.com/bitcoinphantom/bitcoinphantom && cd bitcoinphantom && ./autogen.sh && ./configure && make
+    ```
+
+> **Note**: If you get a "memory exhausted" error, make a swap file. (https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-16-04)
+
+
+### Mac OS X Wallet
+
+> **Note:** This has only been confirmed to work on OS X Sierra (10.12) and OS X High Sierra (10.13) with XCode 9.2 and `Apple LLVM version 9.0.0 (clang-900.0.39.2)`.
+
+1. Ensure you have mysql and boost installed.
+
+    ```shell
+    brew install mysql boost
+    ```
+
+2. Ensure you have python 2.7 installed and in your path (OS X comes with this by default)
+
+    ```shell
+    python --version
+    ```
+
+3. Export the required environment variables
+
+    ```shell
+    export bitcoinphantom_PLATFORM='mac'
+    export CXX=clang++
+    export CC=clang
+    ```
+
+4. Run your build commands
+
+    ```shell
+    ./building/common.sh
+    ./building/mac/requirements.sh
+    ./building/mac/build.sh
+    ```
+
+5. Grab a :coffee: and wait it out
+
+6. Create the `.dmg` file
+
+    ```shell
+    ./building/mac/dist.sh
+    ```
+
+### Windows Wallet
+
+TODO. Take a look at [building/windows](./building/windows).
+
+## Docker Images
+
+Check out the [`contrib/readme`](https://github.com/bitcoinphantom/bitcoinphantom/tree/master/contrib/docker) for more information.
+
+## Mining
+
+### Solo mining
+
+Instead of joining a mining pool you can use the wallet to mine all by yourself. You need to specify the algorithm (see below) and set the "gen" flag. For instance, in the configuration specify `gen=1`.
+
+### Using different algorithms
+
+To use a specific mining algorithm use the `algo` switch in your configuration file (`.conf` file) or from the command line (like this `--algo=x17`). Here are the possible values:
+
+```
+algo=x17
+algo=scrypt
+algo=groestl
+algo=lyra
+algo=blake
+```
+
+## TestNet
+
+Here is a list of active testnet nodes:
+ddvnucmtvyiemiuk.onion (sunerok)
+
+## Donations
+
+We believe in keeping bitcoinphantom free and open. Any donations to help fuel the development effort are greatly appreciated! :smile:
+
+* Address for donations in bitcoinphantom (btcx): `DDd1pVWr8PPAw1z7DRwoUW6maWh5SsnCcp`
+* Address for donations in Bitcoin (BTC): `142r3vCAH3AzABiQjFPmcrSCp6TDzEDuB1`
+
+## Special Shout Outs
+
+Special thanks to the following people that have helped make bitcoinphantom possible. :raised_hands:
+
+Sunerok, CryptoRekt, MKinney, BearSylla, Hypermist, Pallas1, FuzzBawls, BuZz, glodfinch, InfernoMan, AhmedBodi, BitSpill, MentalCollatz, ekryski and the **entire** #bitcoinphantom community!
+
+
+
+
+# Bug Reporting
+
+If you think you've found a bug or a problem with bitcoinphantom, please let us know! First, search our issue tracker to see if someone has already reported the problem. If they haven't, open a new issue, and fill out the template with as much information as possible. The more you can tell us about the problem and how it occurred, the more likely we are to fix it.
+
+## _Please do not report security vulnerabilities publicly._
+
+
+## How to report a bug
+
+### Code issues
+
+Since we are a 100% open-source project we strongly prefer if you create a pull-request on Github in the proper repository with the necessary fix.
+
+Alternatively, if you would like to make a suggestion regarding a potential fix please send an email to contact@bitcoinphantom.com
+
+
+### Security-related issues
+
+Contact the developers privately by sending an e-mail to contact@bitcoinphantom.com with the details of the issue. Do not post the issue on github or anywhere else until the issue has been resolved.
